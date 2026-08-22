@@ -1,0 +1,80 @@
+interface PerformOperation {
+    boolean check(int a);
+}
+
+class MyCalculator {
+     public PerformOperation isOdd() {
+        return new PerformOperation() {
+            @Override
+            public boolean check(int a) {
+                return a % 2 != 0;
+            }
+        };
+    }
+
+    public PerformOperation isPrime() {
+        return new PerformOperation() {
+            @Override
+            public boolean check(int a) {
+                if (a < 2) {
+                    return false;
+                }
+                for (int i = 2; i * i <= a; i++) {
+                    if (a % i == 0) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
+    }
+
+    public PerformOperation isPalindrome() {
+        return new PerformOperation() {
+            @Override
+            public boolean check(int a) {
+                int original = a;
+                int reversed = 0;
+                while (a > 0) {
+                    reversed = (reversed * 10) + (a % 10);
+                    a /= 10;
+                }
+                return original == reversed;
+            }
+        };
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws java.io.IOException {
+        MyCalculator ob = new MyCalculator();
+        java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(System.in));
+        
+        int T = Integer.parseInt(br.readLine().trim());
+        PerformOperation op;
+        boolean ret = false;
+        String ans = null;
+        
+        while (T-- > 0) {
+            String s = br.readLine().trim();
+            java.util.StringTokenizer st = new java.util.StringTokenizer(s);
+            int ch = Integer.parseInt(st.nextToken());
+            int num = Integer.parseInt(st.nextToken());
+            
+            if (ch == 1) {
+                op = ob.isOdd();
+                ret = op.check(num);
+                ans = (ret) ? "ODD" : "EVEN";
+            } else if (ch == 2) {
+                op = ob.isPrime();
+                ret = op.check(num);
+                ans = (ret) ? "PRIME" : "COMPOSITE";
+            } else if (ch == 3) {
+                op = ob.isPalindrome();
+                ret = op.check(num);
+                ans = (ret) ? "PALINDROME" : "NOT PALINDROME";
+            }
+            System.out.println(ans);
+        }
+    }
+}
