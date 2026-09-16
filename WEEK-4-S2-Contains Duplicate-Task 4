@@ -1,0 +1,16 @@
+class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        Set<Integer> seen = new HashSet<>();
+        
+        for (int num : nums) {
+            // .add() returns false if the element is already present in the set
+            if (!seen.add(num)) {
+                return true;
+            }
+        }
+        
+        // If the loop finishes without finding duplicates, all elements are unique
+        return false;
+        
+    }
+}
