@@ -1,0 +1,65 @@
+import java.util.*;
+
+public class TASK2RealTimeStreamAnalyticEngine {
+    
+    // Structure to keep track of running sum and count for averages
+    static class SensorStats {
+        double sum = 0;
+        int count = 0;
+
+        void addValue(double value) {
+            this.sum += value;
+            this.count++;
+        }
+
+        double getAverage() {
+            return this.count == 0 ? 0 : this.sum / this.count;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        // Read the total number of stream elements
+        if (!scanner.hasNextInt()) return;
+        int n = scanner.nextInt();
+        
+        // Map to store running stats for each sensor
+        Map<String, SensorStats> sensorMap = new HashMap<>();
+
+        // Process the real-time stream data
+        for (int i = 0; i < n; i++) {
+            String sensorId = scanner.next();
+            double val = scanner.nextDouble();
+            
+            // Compute running average efficiently
+            sensorMap.computeIfAbsent(sensorId, k -> new SensorStats()).addValue(val);
+        }
+        scanner.close();
+
+        // Sort the results by average in descending order
+        List<Map.Entry<String, SensorStats>> sortedSensors = new ArrayList<>(sensorMap.entrySet());
+        sortedSensors.sort((a, b) -> Double.compare(b.getValue().getAverage(), a.getValue().getAverage()));
+
+        // Print final aggregated output
+        System.out.println("\n--- Output ---");
+        for (Map.Entry<String, SensorStats> entry : sortedSensors) {
+            System.out.printf("%s %.1f%n", entry.getKey(), entry.getValue().getAverage());
+        }
+    }
+}
+
+
+6
+s1 60
+s2 40
+s3 80
+s4 70
+s2 90
+s3 30
+
+--- Output ---
+s4 70.0
+s2 65.0
+s1 60.0
+s3 55.0
